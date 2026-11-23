@@ -536,8 +536,10 @@ function lookup(scope, path) {
   if (s === null) return undefined;
   let v = s.vars[path[0]];
   for (let k = 1; k < path.length; k++) {
-    if (v === null || typeof v !== 'object' || !Object.hasOwn(v, path[k])) return undefined;
-    v = v[path[k]];
+    if (v === null || typeof v !== 'object') return undefined;
+    const desc = Object.getOwnPropertyDescriptor(v, path[k]);
+    if (desc === undefined) return undefined;
+    v = desc.value;
   }
   return v;
 }
